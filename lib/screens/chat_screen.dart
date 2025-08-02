@@ -3,6 +3,7 @@ import 'package:chatbot/services/auth/auth_service.dart';
 import 'package:chatbot/services/chat/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatScreen extends StatelessWidget {
   final String recieverEmail;
@@ -49,9 +50,7 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           // display all messages
-          Expanded(
-            child: buildMessageList(),
-          ),
+          Expanded(child: buildMessageList()),
 
           // user input
           buildUserInput(),
@@ -86,14 +85,51 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  // build message item
   Widget buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-    // is current user
     bool isCurrentUser = data["senderID"] == authService.getCurrentUser()!.uid;
 
-    // align message to the right if sender is the current user, else to the left
+    Widget messageContent;
+    if (data['type'] == 'text') {
+      messageContent = Text(
+        data['message'],
+        style: TextStyle(
+          color: isCurrentUser ? Colors.white : Colors.black87,
+          fontSize: 16,
+        ),
+      );
+    } else if (data['type'] == 'document') {
+      messageContent = GestureDetector(
+        onTap: () {
+          // Open document in browser
+          launchUrl(Uri.parse(data['fileUrl']));
+        },
+        child: Text(
+          "📄 Document",
+          style: TextStyle(
+            color: isCurrentUser ? Colors.white : Colors.blueAccent,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    } else if (data['type'] == 'video') {
+      messageContent = GestureDetector(
+        onTap: () {
+          // Open video in browser
+          launchUrl(Uri.parse(data['fileUrl']));
+        },
+        child: Text(
+          "🎥 Video",
+          style: TextStyle(
+            color: isCurrentUser ? Colors.white : Colors.redAccent,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    } else {
+      messageContent = const Text("Unsupported message");
+    }
+
     return Align(
       alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -101,28 +137,9 @@ class ChatScreen extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
         decoration: BoxDecoration(
           color: isCurrentUser ? Colors.blueAccent : Colors.grey[300],
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(12),
-            topRight: const Radius.circular(12),
-            bottomLeft: isCurrentUser ? const Radius.circular(12) : Radius.zero,
-            bottomRight:
-                isCurrentUser ? Radius.zero : const Radius.circular(12),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 3,
-              offset: Offset(1, 1),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          data["message"],
-          style: TextStyle(
-            color: isCurrentUser ? Colors.white : Colors.black87,
-            fontSize: 16,
-          ),
-        ),
+        child: messageContent,
       ),
     );
   }
@@ -133,6 +150,18 @@ class ChatScreen extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
+          // Pick document
+          IconButton(
+            icon: const Icon(Icons.attach_file, color: Colors.blueAccent),
+            onPressed: () => chatService.sendDocument(recieverID),
+          ),
+
+          // Pick video
+          IconButton(
+            icon: const Icon(Icons.videocam, color: Colors.blueAccent),
+            onPressed: () => chatService.sendVideo(recieverID),
+          ),
+
           // textfield
           Expanded(
             child: CustomTextfield(
@@ -140,9 +169,9 @@ class ChatScreen extends StatelessWidget {
               controller: messageController,
             ),
           ),
-      
+
           const SizedBox(width: 8),
-      
+
           // send button
           Container(
             decoration: BoxDecoration(

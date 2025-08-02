@@ -4,15 +4,19 @@ class MessageModel {
   final String senderID;
   final String senderEmail;
   final String recieverID;
-  final String message;
+  final String? message;
   final Timestamp timeStamp;
+  final String? fileUrl;
+  final String type;
 
   MessageModel({
     required this.senderID,
     required this.senderEmail,
     required this.recieverID,
-    required this.message,
+    this.message,
     required this.timeStamp,
+    this.fileUrl,
+    required this.type,
   });
 
   // convert to a map
@@ -22,7 +26,9 @@ class MessageModel {
       'senderEmail': senderEmail,
       'recieverID': recieverID,
       'message': message,
-      'timeStamp': timeStamp, // match exactly with Firestore query
+      'timeStamp': timeStamp,
+      'fileUrl': fileUrl,
+      'type': type,
     };
   }
 
@@ -33,6 +39,8 @@ class MessageModel {
       recieverID: map['recieverID'],
       message: map['message'],
       timeStamp: map['timeStamp'],
+      fileUrl: map['fileUrl'],
+      type: map['type'],
     );
   }
 }
