@@ -1,9 +1,11 @@
-import 'package:chatbot/auth/login_register.dart';
-import 'package:chatbot/screens/login_screen.dart';
-import 'package:chatbot/themes/theme.dart';
+import 'package:chatbot/services/auth/auth_gate.dart';
+import 'package:chatbot/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -16,9 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Chatbot Application',
       debugShowCheckedModeBanner: false,
       // theme: themes,
-      home: LoginRegister(),
+      home: AuthGate(),
     );
   }
 }
-
-
