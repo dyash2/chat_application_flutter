@@ -56,7 +56,7 @@ class UsersListScreen extends StatelessWidget {
     Map<String, dynamic> userData,
     BuildContext context,
   ) {
-    if (userData["email"] != authService.getCurrentUser()) {
+    if (userData["email"] != authService.getCurrentUser()!.email) {
       // display all users except current user
       return CustomUsertile(
         text: userData["email"],
@@ -64,8 +64,10 @@ class UsersListScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ChatScreen(recieverEmail: userData["email"]),
+              builder: (context) => ChatScreen(
+                recieverEmail: userData["email"],
+                recieverID: userData["uid"],
+              ),
             ),
           );
         },

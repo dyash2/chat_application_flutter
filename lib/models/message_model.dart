@@ -8,22 +8,31 @@ class MessageModel {
   final Timestamp timeStamp;
 
   MessageModel({
-required this.senderID,
-required this.senderEmail,
-required this.recieverID,
-required this.message,
-required this.timeStamp
+    required this.senderID,
+    required this.senderEmail,
+    required this.recieverID,
+    required this.message,
+    required this.timeStamp,
   });
 
-
-//convert to a map
-  Map<String,dynamic> toMap(){
+  // convert to a map
+  Map<String, dynamic> toMap() {
     return {
-      'senderID' : senderID,
-      'senderEmail' :recieverID,
-      'recieverID' : recieverID,
+      'senderID': senderID,
+      'senderEmail': senderEmail,
+      'recieverID': recieverID,
       'message': message,
-      'timestamp' : timeStamp
+      'timeStamp': timeStamp, // match exactly with Firestore query
     };
+  }
+
+  factory MessageModel.fromMap(Map<String, dynamic> map) {
+    return MessageModel(
+      senderID: map['senderID'],
+      senderEmail: map['senderEmail'],
+      recieverID: map['recieverID'],
+      message: map['message'],
+      timeStamp: map['timeStamp'],
+    );
   }
 }
