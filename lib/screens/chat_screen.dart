@@ -36,16 +36,27 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String displayName = recieverEmail.split('@')[0];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          recieverEmail,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          displayName,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context); // Go Back
+          },
+          icon: const Icon(Icons.arrow_back_ios_rounded),
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Column(
         children: [

@@ -18,16 +18,102 @@ class UsersListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(children: [FlutterLogo(size: 50), Text("ChatApp")]),
-        actions: [
-          IconButton(
-            onPressed: () {
-              logout();
-            },
-            icon: Icon(Icons.logout),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "Chat",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              TextSpan(
+                text: "App",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       logout();
+        //     },
+        //     icon: Icon(Icons.logout),
+        //   ),
+        // ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+
+          children: [
+            // Drawer Header with Profile
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                chatService.auth.currentUser!.email!.split('@')[0],
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              accountEmail: Text(
+                chatService.auth.currentUser!.email!,
+                style: const TextStyle(fontSize: 14),
+              ),
+              currentAccountPicture: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, size: 40, color: Colors.blue),
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+
+            // Home Button
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+                // Navigate to Home
+              },
+            ),
+
+            // Profile Button
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                // Navigate to Profile
+              },
+            ),
+
+            Divider(),
+
+            // Logout Button
+            ListTile(
+              leading: Icon(Icons.logout, color: Colors.red),
+              title: Text('Logout', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                logout(); // Call logout function
+              },
+            ),
+          ],
+        ),
+      ),
+
       body: _buildUserList(),
     );
   }
@@ -59,7 +145,12 @@ class UsersListScreen extends StatelessWidget {
     if (userData["email"] != authService.getCurrentUser()!.email) {
       // display all users except current user
       return CustomUsertile(
-        text: userData["email"],
+        name: userData["email"].split('@')[0], 
+        lastMessage:
+            "Hey! How are you?", 
+        time: "5:30 AM",
+        unreadCount: 2,
+        isOnline: true,
         onTap: () {
           Navigator.push(
             context,

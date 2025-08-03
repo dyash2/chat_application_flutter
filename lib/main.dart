@@ -1,4 +1,5 @@
 import 'package:chatbot/firebase_options.dart';
+import 'package:chatbot/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:chatbot/services/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chatbot Application',
       debugShowCheckedModeBanner: false,
-      // theme: themes,
+      theme: appTheme,
       home: AuthGate(),
     );
   }
