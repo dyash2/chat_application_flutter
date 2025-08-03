@@ -6,7 +6,9 @@ class CustomUsertile extends StatelessWidget {
   final String time;
   final int unreadCount;
   final bool isOnline;
+  final String profilePicUrl;
   final VoidCallback onTap;
+  final VoidCallback onProfileTap;
 
   const CustomUsertile({
     super.key,
@@ -15,45 +17,29 @@ class CustomUsertile extends StatelessWidget {
     required this.time,
     this.unreadCount = 0,
     this.isOnline = false,
+    this.profilePicUrl = '',
     required this.onTap,
+    required this.onProfileTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: Stack(
-        children: [
-          CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.grey[300],
-            child: Icon(Icons.person, size: 28, color: Colors.grey[700]),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: CircleAvatar(
-              radius: 6,
-              backgroundColor: isOnline ? Colors.green : Colors.red,
-            ),
-          ),
-        ],
+      leading: GestureDetector(
+        onTap: onProfileTap,
+        child: CircleAvatar(
+          radius: 25,
+          backgroundColor: Colors.grey,
+          child: const Icon(Icons.person, size: 30, color: Colors.white),
+        ),
       ),
-      title: Text(
-        name,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(
-        lastMessage,
-        overflow: TextOverflow.ellipsis,
-      ),
+      title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text(lastMessage, overflow: TextOverflow.ellipsis),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            time,
-            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-          ),
+          Text(time, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
           if (unreadCount > 0)
             Container(
               margin: const EdgeInsets.only(top: 5),

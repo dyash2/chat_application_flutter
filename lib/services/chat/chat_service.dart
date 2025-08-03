@@ -141,4 +141,14 @@ class ChatService {
         .orderBy("timeStamp", descending: false)
         .snapshots();
   }
+
+  Stream<QuerySnapshot> getLastMessage(String chatRoomID) {
+    return firestore
+        .collection("chat_rooms")
+        .doc(chatRoomID)
+        .collection("messages")
+        .orderBy("timeStamp", descending: true)
+        .limit(1)
+        .snapshots();
+  }
 }

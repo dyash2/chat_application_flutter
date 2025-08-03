@@ -22,7 +22,7 @@ class CustomTextfield extends StatelessWidget {
       style: TextStyle(color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: theme.colorScheme.onSurface),
+        labelStyle: TextStyle(color: theme.colorScheme.secondary,fontStyle: FontStyle.italic),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: theme.colorScheme.primary),
         ),

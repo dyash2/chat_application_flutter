@@ -8,15 +8,13 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController pwController = TextEditingController();
   final TextEditingController confirmpwController = TextEditingController();
   final void Function()? onTap;
+
   RegisterScreen({super.key, required this.onTap});
 
   void register(BuildContext context) {
-    // get auth service
     final authService = AuthService();
 
-    //if password match then go forward and create user
     if (pwController.text == confirmpwController.text) {
-      //try register
       try {
         authService.signUpWithEmailPassword(
           emailController.text,
@@ -28,12 +26,10 @@ class RegisterScreen extends StatelessWidget {
           builder: (context) => AlertDialog(title: Text(e.toString())),
         );
       }
-    }
-    //if password dont match
-    else {
+    } else {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(title: Text("Password don't match")),
+        builder: (context) => const AlertDialog(title: Text("Passwords don't match")),
       );
     }
   }
@@ -42,83 +38,99 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 40.0),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                spacing: 20,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //App Logo
-                  const FlutterLogo(size: 80),
-
-                  const SizedBox(height: 24),
-
-                  // Create an account Message
-                  const Text(
-                    "Let's create a account for you",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      resizeToAvoidBottomInset: true,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Title
+                const Text(
+                  "Create an account 👤",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
                   ),
-
-                  const SizedBox(height: 32),
-
-                  // Email TextField
-                  CustomTextfield(label: "Email", controller: emailController),
-
-                  const SizedBox(height: 16),
-
-                  //Password TextField
-                  CustomTextfield(
-                    label: "Password",
-                    controller: pwController,
-                    obscureText: true,
+                ),
+                const SizedBox(height: 8),
+          
+                // Subtitle
+                const Text(
+                  "Let's get started by creating your account",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
                   ),
-                  const SizedBox(height: 16),
-
-                  // Confirm Password TextField
-                  CustomTextfield(
-                    label: "Confirm Password",
-                    controller: confirmpwController,
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Register Button
-                  CustomButton(
-                    text: "Register",
-                    onPressed: () {
-                      register(context);
-                    },
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Login Text with GestureDetector
-                  Row(
-                    spacing: 5,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account!"),
-                      GestureDetector(
-                        onTap: onTap,
-                        child: Text(
-                          "Login Now",
-                          style: TextStyle(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                ),
+                const SizedBox(height: 24),
+          
+                // Email Field
+                CustomTextfield(
+                  label: "Email",
+                  controller: emailController,
+                ),
+                const SizedBox(height: 16),
+          
+                // Password Field
+                CustomTextfield(
+                  label: "Password",
+                  controller: pwController,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 16),
+          
+                // Confirm Password Field
+                CustomTextfield(
+                  label: "Confirm Password",
+                  controller: confirmpwController,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 24),
+          
+                // Register Button
+                CustomButton(
+                  text: "REGISTER",
+                  onPressed: () => register(context),
+                ),
+                const SizedBox(height: 16),
+          
+                // OR Divider
+                Row(
+                  children: const [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("OR"),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: 16),
+          
+                // Login Redirect
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account?"),
+                    GestureDetector(
+                      onTap: onTap,
+                      child: Text(
+                        " Login Now",
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
