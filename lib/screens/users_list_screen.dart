@@ -58,14 +58,62 @@ class UsersListScreen extends StatelessWidget {
         child: StreamBuilder(
           stream: chatService.getUserStream(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            // Handle loading state
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // Get current user data
+            // Handle error state
+            if (snapshot.hasError) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Error loading users"),
+                  ListTile(
+                    leading: const Icon(Icons.logout, color: Colors.red),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.red, letterSpacing: 2),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      logout();
+                    },
+                  ),
+                ],
+              );
+            }
+
+            // Handle empty user list
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("No users available"),
+                  const SizedBox(height: 10),
+                  ListTile(
+                    leading: const Icon(Icons.logout, color: Colors.red),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.red, letterSpacing: 2),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      logout();
+                    },
+                  ),
+                ],
+              );
+            }
+
+            // Get current user data or fallback
             final currentUserData = snapshot.data!.firstWhere(
               (user) => user["email"] == authService.getCurrentUser()!.email,
-              orElse: () => {},
+              orElse: () => {
+                "name": "Guest",
+                "email": authService.getCurrentUser()!.email,
+                "profilePicUrl": "",
+              },
             );
 
             return Column(
@@ -85,7 +133,7 @@ class UsersListScreen extends StatelessWidget {
                     margin: EdgeInsets.zero,
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
-                      border: Border(bottom: BorderSide.none),
+                      border: const Border(bottom: BorderSide.none),
                     ),
                     accountName: Text(
                       currentUserData["name"] ??
@@ -119,7 +167,7 @@ class UsersListScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Menu items in Expanded
+                // Menu items
                 Expanded(
                   child: ListView(
                     padding: EdgeInsets.zero,
@@ -130,9 +178,7 @@ class UsersListScreen extends StatelessWidget {
                           'Home',
                           style: TextStyle(letterSpacing: 2),
                         ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                        onTap: () => Navigator.pop(context),
                       ),
                       ListTile(
                         leading: const Icon(Icons.person),
@@ -194,7 +240,12 @@ class UsersListScreen extends StatelessWidget {
           return const Center(
             child: Text(
               "No users available 👤",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 2,
+                wordSpacing: 5,
+              ),
             ),
           );
         }

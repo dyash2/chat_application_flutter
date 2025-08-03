@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          physics: NeverScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -49,7 +49,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-
+            
                 // Title
                 const Text(
                   "Login to your account",
@@ -57,11 +57,11 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 24),
-
+            
                 // Email Field
                 CustomTextfield(label: "Username", controller: emailController),
                 const SizedBox(height: 16),
-
+            
                 // Password Field
                 CustomTextfield(
                   label: "Password",
@@ -69,11 +69,11 @@ class LoginScreen extends StatelessWidget {
                   obscureText: true,
                 ),
                 const SizedBox(height: 24),
-
+            
                 // Login Button
                 CustomButton(text: "LOGIN", onPressed: () => login(context)),
                 const SizedBox(height: 16),
-
+            
                 // OR Divider
                 Row(
                   children: const [
@@ -86,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-
+            
                 // Register Text
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -24,22 +24,36 @@ class CustomUsertile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool hasProfilePic = profilePicUrl.isNotEmpty;
+
     return ListTile(
       onTap: onTap,
       leading: GestureDetector(
         onTap: onProfileTap,
         child: CircleAvatar(
           radius: 25,
-          backgroundColor: Colors.grey,
-          child: const Icon(Icons.person, size: 30, color: Colors.white),
+          backgroundImage: hasProfilePic ? NetworkImage(profilePicUrl) : null,
+          backgroundColor: Colors.grey[300],
+          child: !hasProfilePic
+              ? const Icon(Icons.person, size: 30, color: Colors.white)
+              : null,
         ),
       ),
-      title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(lastMessage, overflow: TextOverflow.ellipsis),
+      title: Text(
+        name,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        lastMessage,
+        overflow: TextOverflow.ellipsis,
+      ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(time, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+          Text(
+            time,
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+          ),
           if (unreadCount > 0)
             Container(
               margin: const EdgeInsets.only(top: 5),

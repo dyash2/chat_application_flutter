@@ -7,7 +7,7 @@ class AuthService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   //get current user
-  User? getCurrentUser (){
+  User? getCurrentUser() {
     return auth.currentUser;
   }
 
@@ -18,7 +18,6 @@ class AuthService {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
-
       );
       //save user info if it doesn't already exist
       firestore.collection("Users").doc(userCredential.user!.uid).set({
